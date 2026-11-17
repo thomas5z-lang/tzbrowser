@@ -1,0 +1,40 @@
+:root { --accent: #fa1e4e; --bar: #07060b; --text: #f1eff6; --muted: #8d88a0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; user-select: none; }
+body {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 10px 0;
+  background: var(--bar);
+  border-right: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  font: 12px "Segoe UI", system-ui, sans-serif;
+  color: var(--muted);
+}
+nav { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.sep { width: 26px; height: 1px; margin: 10px 0; background: #ffffff14; }
+.spacer { flex: 1; }
+
+.item {
+  position: relative;
+  width: 40px; height: 40px;
+  display: grid; place-items: center;
+  border: 0; border-radius: 6px;
+  background: transparent; color: var(--muted);
+  transition: background .12s, color .12s;
+}
+.item:hover { background: #ffffff10; color: var(--text); }
+.item svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.item img { width: 22px; height: 22px; border-radius: 5px; filter: grayscale(.55) brightness(.9); transition: filter .15s, transform .15s; }
+.item:hover img { filter: none; transform: scale(1.08); }
+
+/* aktives Panel: Akzentbalken links wie bei Opera */
+.item.active { background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent); }
+.item.active img { filter: none; }
+.item.active::before {
+  content: ""; position: absolute; left: -8px; top: 8px; bottom: 8px; width: 3px;
+  background: var(--accent); box-shadow: 0 0 10px var(--accent);
+}
+
+#t-vpn.on { color: #fff; background: var(--accent); box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 50%, transparent); }
+#t-vpn.starting svg { animation: spin 1.2s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+#t-downloads.active { color: var(--accent); }

@@ -1,0 +1,96 @@
+{
+  "name": "tzbrowser",
+  "productName": "TZBrowser",
+  "version": "0.12.0",
+  "description": "TZBrowser – schneller, privater Browser mit starkem Werbeblocker, Vorlesen und Übersetzen",
+  "author": "ZeroCool",
+  "license": "MIT",
+  "private": true,
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win --publish never",
+    "release": "electron-builder --win --publish always",
+    "postinstall": "node node_modules/electron/install.js",
+    "fetch-bin": "powershell -NoProfile -ExecutionPolicy Bypass -File build/fetch-bin.ps1"
+  },
+  "devDependencies": {
+    "electron": "github:castlabs/electron-releases#v45.2.1+wvcus",
+    "electron-builder": "^26.18.0"
+  },
+  "dependencies": {
+    "@ghostery/adblocker-electron": "^2.20.3",
+    "@mozilla/readability": "^0.6.0",
+    "electron-chrome-extensions": "^4.10.0",
+    "electron-chrome-web-store": "^0.13.0",
+    "electron-updater": "^6.8.11"
+  },
+  "build": {
+    "appId": "de.zerocool.tzbrowser",
+    "productName": "TZBrowser",
+    "copyright": "© 2026 ZeroCool – MIT-Lizenz",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json",
+      "LICENSE",
+      "THIRD-PARTY-NOTICES.md"
+    ],
+    "extraResources": [
+      {
+        "from": "bin",
+        "to": "bin",
+        "filter": [
+          "ffmpeg.exe",
+          "ffprobe.exe",
+          "wgcf.exe",
+          "wireproxy.exe"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico",
+      "executableName": "TZBrowser"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "TZBrowser",
+      "installerIcon": "assets/icon.ico",
+      "uninstallerIcon": "assets/icon.ico",
+      "artifactName": "TZBrowser-Setup-${version}.${ext}",
+      "deleteAppDataOnUninstall": false
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "thomas5z-lang",
+        "repo": "tzbrowser",
+        "releaseType": "release"
+      }
+    ],
+    "electronDist": "node_modules/electron/dist",
+    "electronVersion": "45.2.1",
+    "afterSign": "build/vmp-sign.js"
+  },
+  "homepage": "https://github.com/thomas5z-lang/tzbrowser",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thomas5z-lang/tzbrowser.git"
+  }
+}

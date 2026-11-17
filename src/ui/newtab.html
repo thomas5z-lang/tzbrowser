@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>Neuer Tab</title>
+  <style>
+    :root { --accent: #fa1e4e; --bg: #0b0a10; --card: #15121d; --card-h: #1d1927; --text: #f1eff6; --muted: #8d88a0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 34px;
+      background:
+        linear-gradient(115deg, transparent 0 62%, color-mix(in srgb, var(--accent) 7%, transparent) 62% 64%, transparent 64%),
+        radial-gradient(1000px 520px at 50% -12%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 65%),
+        radial-gradient(700px 400px at 100% 110%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%),
+        var(--bg);
+      color: var(--text); font: 14px/1.4 "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+      padding-bottom: 8vh; overflow: hidden;
+    }
+    .brand { display: flex; align-items: center; gap: 16px; }
+    .brand svg { width: 64px; height: 64px; filter: drop-shadow(0 0 18px color-mix(in srgb, var(--accent) 55%, transparent)); }
+    .brand svg .body { fill: var(--accent); }
+    .brand h1 { font-size: 52px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase; }
+    .brand h1 span { color: var(--accent); }
+    /* Suchfeld: Rahmen als Hintergrund-Ebene, damit die schrägen Ecken sauber mitgeschnitten werden */
+    form {
+      width: min(660px, 86vw); position: relative; padding: 1px;
+      background: #ffffff1c;
+      clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+      filter: drop-shadow(0 14px 30px #000a);
+      transition: background .15s;
+    }
+    form:focus-within { background: var(--accent); }
+    input {
+      display: block; width: 100%; height: 52px; padding: 0 24px;
+      border: 0; outline: 0;
+      background: #0d0b12; color: var(--text); font: inherit; font-size: 16px;
+      clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+    }
+    input::placeholder { color: var(--muted); }
+    .tiles { display: grid; grid-template-columns: repeat(4, 116px); gap: 14px; }
+    .tile {
+      position: relative;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      padding: 18px 8px 16px; background: var(--card);
+      color: var(--text); text-decoration: none; font-size: 12.5px; font-weight: 600;
+      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+      transition: background .12s, transform .12s;
+    }
+    .tile::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--accent); transform: scaleX(0); transition: transform .18s; }
+    .tile:hover { background: var(--card-h); transform: translateY(-3px); }
+    .tile:hover::after { transform: scaleX(1); box-shadow: 0 0 10px var(--accent); }
+    /* Helles Plättchen hinter jedem Logo – so sind auch dunkle Logos (GitHub, X …) gut sichtbar */
+    .tile img {
+      width: 46px; height: 46px; padding: 9px; box-sizing: border-box;
+      border-radius: 10px; background: #f1eff6;
+      box-shadow: 0 4px 14px #0008; transition: box-shadow .15s;
+    }
+    .tile:hover img { box-shadow: 0 0 0 2px var(--accent), 0 4px 18px color-mix(in srgb, var(--accent) 45%, transparent); }
+    #chip { display: none; padding: 8px 16px; font-weight: 700; color: #0b0a10; clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%); }
+    footer { position: fixed; bottom: 14px; color: #4a4558; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
+  </style>
+</head>
+<body>
+  <div class="brand" id="brand">
+    <img id="brand-logo" alt="" style="display:none">
+    <svg id="brand-ghost" viewBox="0 0 64 64" aria-hidden="true">
+      <path class="body" d="M10 14h20v8h-6v28h-8V22h-6zM34 14h20v8L43 42h11v8H34v-8l11-20H34z"/>
+      <ellipse cx="24" cy="28" rx="4.5" ry="6" fill="#0b0a10"/>
+      <ellipse cx="40" cy="28" rx="4.5" ry="6" fill="#0b0a10"/>
+    </svg>
+    <h1 id="brand-name">TZ<span>Browser</span></h1>
+  </div>
+
+  <form id="f" action="https://duckduckgo.com/" method="get" autocomplete="off">
+    <input name="q" placeholder="Mit DuckDuckGo suchen …">
+  </form>
+
+  <div class="tiles" id="tiles"></div>
+
+  <div id="chip"></div>
+  <footer id="foot">TZBrowser · by ZeroCool</footer>
+
+  <script>
+    const q = new URLSearchParams(location.search);
+    const HEX = /^#[0-9a-f]{6}$/i;
+    const root = document.documentElement.style;
+    const accent = q.get('accent');
+    if (HEX.test(accent || '')) root.setProperty('--accent', accent);
+    // eigenes Design (Einstellungen → Design)
+    if (q.get('custom') && HEX.test(q.get('bg') || '') && HEX.test(q.get('text') || '')) {
+      const bg = q.get('bg'); const tx = q.get('text');
+      root.setProperty('--bg', bg); root.setProperty('--text', tx);
+      root.setProperty('--card', `color-mix(in srgb, ${bg} 88%, ${tx})`);
+      root.setProperty('--card-h', `color-mix(in srgb, ${bg} 80%, ${tx})`);
+      root.setProperty('--muted', `color-mix(in srgb, ${tx} 58%, ${bg})`);
+      document.querySelector('input').style.background = `color-mix(in srgb, ${bg} 94%, black)`;
+      if (q.get('font')) document.body.style.fontFamily = `"${q.get('font')}", "Segoe UI", system-ui, sans-serif`;
+    }
+    if (/^file:\/\//.test(q.get('nbg') || '')) {
+      document.body.style.backgroundImage = `linear-gradient(#0006, #0008), url("${encodeURI(q.get('nbg'))}")`;
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundPosition = 'center';
+    }
+    const name = (q.get('name') || 'TZBrowser').slice(0, 40);
+    if (name !== 'TZBrowser') {
+      document.getElementById('brand-name').textContent = name;
+      document.getElementById('foot').textContent = name + ' · TZBrowser by ZeroCool';
+    }
+    if (/^file:\/\//.test(q.get('logo') || '')) {
+      const img = document.getElementById('brand-logo');
+      img.src = q.get('logo');
+      img.style.cssText = 'display:block;max-width:220px;max-height:72px;object-fit:contain';
+      document.getElementById('brand-ghost').style.display = 'none';
+    }
+    // Kacheln
+    let tiles = [];
+    try { tiles = JSON.parse(q.get('tiles') || '[]'); } catch { tiles = []; }
+    const box = document.getElementById('tiles');
+    for (const t of tiles.slice(0, 16)) {
+      let u;
+      try { u = new URL(t.url); } catch { continue; }
+      if (!/^https?:$/.test(u.protocol)) continue;
+      const a = document.createElement('a');
+      a.className = 'tile';
+      a.href = u.href;
+      const img = document.createElement('img');
+      img.alt = '';
+      img.src = 'https://icons.duckduckgo.com/ip3/' + u.hostname.replace(/^www\./, '') + '.ico';
+      a.append(img, document.createTextNode(String(t.name || u.hostname).slice(0, 24)));
+      box.append(a);
+    }
+    if (q.get('c')) {
+      const chip = document.getElementById('chip');
+      chip.style.display = 'block';
+      chip.style.background = q.get('color') || '#c0c4d0';
+      chip.textContent = q.get('c') === 'Privat'
+        ? '🕶 Privater Tab – Verlauf, Cookies und Logins werden beim Schließen gelöscht'
+        : 'Container: ' + q.get('c') + ' – eigene Cookies und Logins';
+      document.title = q.get('c') === 'Privat' ? 'Privater Tab' : 'Neuer Tab · ' + q.get('c');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+node_modules/
+dist/
+out/
+*.log
+.DS_Store
+Thumbs.db
+bin/*.exe
+build/evs-venv/
+addons/stimme/venv*/
+addons/stimme/stimmen/
+addons/stimme/cache/
+addons/stimme/analysen/
+__pycache__/

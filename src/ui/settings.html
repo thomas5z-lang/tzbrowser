@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'">
+  <title>Einstellungen</title>
+  <link rel="stylesheet" href="internal.css">
+  <style>
+    main { max-width: 900px; }
+    .card { background: var(--card); padding: 6px 20px; margin-bottom: 8px; clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%); }
+    .opt { display: grid; grid-template-columns: 1fr minmax(220px, 300px); gap: 20px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .opt:last-child { border-bottom: 0; }
+    .opt label { font-weight: 600; }
+    .opt small { display: block; color: var(--muted); font-weight: 400; margin-top: 3px; font-size: 12.5px; }
+    .opt select, .opt input[type=text], .opt input[type=number], .opt input[type=password], .opt textarea {
+      width: 100%; height: 36px; padding: 0 10px; border: 1px solid var(--line); border-radius: 4px;
+      background: #0e0c14; color: var(--text); font: inherit; outline: 0;
+    }
+    .opt textarea { height: 84px; padding: 8px 10px; resize: vertical; }
+    .opt select:focus, .opt input:focus, .opt textarea:focus { border-color: var(--accent); }
+    .ctrl { display: flex; gap: 8px; align-items: center; justify-content: flex-end; }
+    .switch { position: relative; width: 46px; height: 24px; flex: none; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .switch span { position: absolute; inset: 0; background: #2a2635; border-radius: 12px; cursor: pointer; transition: background .15s; }
+    .switch span::after { content: ''; position: absolute; left: 3px; top: 3px; width: 18px; height: 18px; border-radius: 50%; background: #cfcadb; transition: transform .15s; }
+    .switch input:checked + span { background: var(--accent); }
+    .switch input:checked + span::after { transform: translateX(22px); background: #fff; }
+    .saved { color: #3ddc84; font-size: 12px; opacity: 0; transition: opacity .3s; white-space: nowrap; }
+    .saved.show { opacity: 1; }
+    .saved.err { color: var(--danger); }
+    #restart { margin: 0 0 16px; }
+    .foot { color: var(--muted); margin-top: 28px; display: flex; gap: 12px; align-items: center; }
+    .opt.wide { grid-template-columns: 1fr; }
+    .opt.wide .ctrl { justify-content: stretch; flex-direction: column; align-items: stretch; }
+    .design { display: flex; flex-direction: column; gap: 16px; width: 100%; }
+    .d-site { display: flex; gap: 8px; }
+    .d-site input { flex: 1; }
+    .d-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 2fr; gap: 12px; }
+    .d-field { display: flex; flex-direction: column; gap: 6px; font-weight: 400; font-size: 12.5px; color: var(--muted); }
+    .d-field input[type=color] { width: 100%; height: 36px; padding: 2px; border: 1px solid var(--line); border-radius: 4px; background: #0e0c14; cursor: pointer; }
+    .d-media { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .d-logo { min-width: 140px; height: 56px; padding: 6px 10px; display: grid; place-items: center; border: 1px dashed var(--line); border-radius: 6px; color: var(--muted); font-size: 12px; background: #f1eff6; }
+    .d-logo img { max-height: 44px; max-width: 200px; object-fit: contain; }
+    .d-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .design input[type=text], .design select, .design textarea { width: 100%; height: 36px; padding: 0 10px; border: 1px solid var(--line); border-radius: 4px; background: #0e0c14; color: var(--text); font: inherit; outline: 0; }
+    .design textarea { height: 150px; padding: 8px 10px; resize: vertical; font-family: Consolas, monospace; font-size: 12.5px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v2.6M12 18.9v2.6M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M2.5 12h2.6M18.9 12h2.6M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></svg>
+      <div>
+        <h1>Einstellungen</h1>
+        <p id="sub">TZBrowser – alles wird sofort gespeichert</p>
+      </div>
+    </div>
+    <input id="search" type="search" placeholder="Einstellung suchen …" autocomplete="off" spellcheck="false">
+  </header>
+  <main>
+    <div id="restart" class="hint hidden">⚠ Diese Änderung wirkt nach einem Neustart von TZBrowser. <button class="ghost-btn" id="restart-btn">Jetzt neu starten</button></div>
+    <div id="list"></div>
+    <div class="foot"><span id="ver"></span><button class="ghost-btn" id="data-btn">TZBrowser-Datenordner öffnen</button></div>
+  </main>
+  <script src="settings.js"></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src * data:; style-src 'self' 'unsafe-inline'; script-src 'self'">
+  <title>Bibliothek</title>
+  <link rel="stylesheet" href="internal.css">
+  <style>
+    .tabs { display: flex; gap: 4px; padding: 0 48px; }
+    .tabs button { height: 36px; padding: 0 18px; border: 0; background: transparent; color: var(--muted); font: inherit; font-weight: 700; letter-spacing: .5px; cursor: pointer; border-bottom: 2px solid transparent; }
+    .tabs button.active { color: var(--text); border-bottom-color: var(--accent); }
+    .tabs button:hover { color: var(--text); }
+    .row.lib { grid-template-columns: 28px minmax(200px, 1fr) minmax(200px, 1.2fr) auto; }
+    .row.hist { grid-template-columns: 70px 28px minmax(200px, 1fr) minmax(160px, 1fr) auto; }
+    .time { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 12.5px; }
+    .url { color: var(--muted); font-size: 12px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .day { margin: 22px 0 8px; color: var(--accent); font-weight: 700; font-size: 12.5px; letter-spacing: 1px; text-transform: uppercase; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 18px; align-items: center; }
+    .toolbar .label { color: var(--muted); margin-right: 4px; }
+    .bm-title { color: var(--text); font-weight: 600; text-decoration: none; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; display: block; }
+    .bm-title:hover { color: var(--accent); text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">
+      <svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4.5L6 21z"/></svg>
+      <div>
+        <h1 id="h">Bibliothek</h1>
+        <p id="sub">Lesezeichen und Verlauf – nur auf diesem PC</p>
+      </div>
+    </div>
+    <input id="search" type="search" placeholder="Suchen …" autocomplete="off" spellcheck="false">
+  </header>
+  <div class="tabs">
+    <button id="tab-bm" class="active">Lesezeichen</button>
+    <button id="tab-hist">Verlauf</button>
+  </div>
+  <main>
+    <section id="sec-bm">
+      <div class="toolbar" id="import"><span class="label">Importieren aus:</span></div>
+      <div id="bm-list"></div>
+      <p id="bm-empty" class="hint hidden">Noch keine Lesezeichen. Klick auf den ☆ in der Adressleiste oder importiere sie oben aus einem anderen Browser.</p>
+    </section>
+    <section id="sec-hist" class="hidden">
+      <div class="toolbar">
+        <span class="label">Verlauf löschen:</span>
+        <button class="ghost-btn" data-clear="3600000">Letzte Stunde</button>
+        <button class="ghost-btn" data-clear="86400000">Letzte 24 Stunden</button>
+        <button class="ghost-btn" data-clear="604800000">Letzte 7 Tage</button>
+        <button class="ghost-btn danger" data-clear="all">Alles</button>
+      </div>
+      <div id="hist-list"></div>
+      <p id="hist-empty" class="hint hidden">Kein Verlauf vorhanden. Private Tabs werden nie gespeichert.</p>
+    </section>
+  </main>
+  <div id="toast"></div>
+  <script src="library.js"></script>
+</body>
+</html>

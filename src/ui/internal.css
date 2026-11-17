@@ -1,0 +1,92 @@
+/* Interne TZBrowser-Seiten (Passwörter usw.) – Opera-GX-Stil */
+:root {
+  --accent: #fa1e4e;
+  --bg: #0b0a10;
+  --card: #15121d;
+  --card-h: #1c1827;
+  --line: #ffffff10;
+  --text: #f1eff6;
+  --muted: #8d88a0;
+  --danger: #ff4d6a;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(900px 400px at 100% 0%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%),
+    var(--bg);
+  color: var(--text);
+  font: 14px/1.4 "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+}
+.hidden { display: none !important; }
+svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+header {
+  position: sticky; top: 0; z-index: 2;
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  padding: 28px 48px 20px;
+  background: linear-gradient(var(--bg) 70%, transparent);
+}
+.title { display: flex; align-items: center; gap: 16px; }
+.title svg { width: 40px; height: 40px; color: var(--accent); filter: drop-shadow(0 0 12px color-mix(in srgb, var(--accent) 50%, transparent)); }
+h1 { font-size: 26px; font-weight: 700; letter-spacing: -.3px; }
+h2 { margin: 36px 0 12px; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); }
+#sub { color: var(--muted); font-size: 12.5px; }
+
+#search {
+  width: 340px; height: 40px; padding: 0 16px;
+  border: 1px solid var(--line); border-radius: 4px; outline: 0;
+  background: var(--card); color: var(--text); font: inherit;
+}
+#search:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
+
+main { padding: 0 48px 60px; }
+.hint { color: var(--muted); padding: 16px 0; }
+
+.row {
+  display: grid;
+  grid-template-columns: 28px minmax(180px, 1.3fr) minmax(140px, 1fr) minmax(140px, 1fr) auto;
+  align-items: center; gap: 16px;
+  padding: 12px 16px; margin-bottom: 6px;
+  background: var(--card);
+  border-left: 3px solid transparent;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+  transition: background .12s, border-color .12s;
+}
+.row:hover { background: var(--card-h); border-left-color: var(--accent); }
+.fav { width: 26px; height: 26px; padding: 4px; border-radius: 6px; background: #f1eff6; }
+.site a { color: var(--text); font-weight: 600; text-decoration: none; }
+.site a:hover { color: var(--accent); }
+.site small { display: block; color: var(--muted); font-size: 11.5px; margin-top: 2px; }
+.field {
+  height: 34px; padding: 0 10px; min-width: 0;
+  border: 1px solid transparent; border-radius: 3px; outline: 0;
+  background: #0000003a; color: var(--text); font: inherit;
+}
+.field:focus { border-color: var(--accent); }
+.field.pw { font-family: Consolas, "Cascadia Mono", monospace; }
+.actions { display: flex; gap: 6px; }
+
+.ghost-btn {
+  height: 32px; padding: 0 12px;
+  border: 1px solid var(--line); border-radius: 3px;
+  background: transparent; color: var(--text); font: inherit; font-size: 12.5px; font-weight: 600;
+  cursor: pointer;
+}
+.ghost-btn:hover { border-color: var(--accent); color: var(--accent); }
+.ghost-btn.accent { background: var(--accent); border-color: var(--accent); color: #fff; }
+.ghost-btn.accent:hover { filter: brightness(1.1); color: #fff; }
+.ghost-btn.danger:hover { border-color: var(--danger); color: var(--danger); }
+
+#never { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: flex; align-items: center; gap: 8px; padding: 6px 6px 6px 12px; background: var(--card); border-radius: 3px; }
+.chip-x { width: 22px; height: 22px; border: 0; border-radius: 3px; background: transparent; color: var(--muted); cursor: pointer; }
+.chip-x:hover { background: var(--danger); color: #fff; }
+
+#toast {
+  position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 20px);
+  padding: 10px 18px; border-radius: 4px;
+  background: var(--accent); color: #fff; font-weight: 600;
+  opacity: 0; transition: .25s; pointer-events: none;
+}
+#toast.show { opacity: 1; transform: translate(-50%, 0); }
